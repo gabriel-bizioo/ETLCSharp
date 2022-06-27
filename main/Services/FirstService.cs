@@ -1,9 +1,24 @@
 using System;
+using System.Linq;
 
 namespace main.Services;
 
 class FirstService{
-    public void first(){
-        Console.WriteLine("Implemente toda a logica e serviços necessario ao ETL dentro dessa estrtura");
+    public void NewTable(){
+        
+        int MediaSalarial;
+
+        string Doenca;
+
+        int MediaIdade;
+
+        using(var context = new analytic_dataContext())
+        {
+            var Media = context.Pacientes.Join(context.ClasseSocials, pc => pc.IdClasseSocial, cs => cs.Id, (pc, cs) => new
+            {
+                salario = cs.SalarioTeto,
+            });       
+
+        }
     }
 }
