@@ -108,4 +108,81 @@ class FirstService{
             });
         }
     }
+
+    public void DiagnosticosClasseSocialMes()
+    {
+        using(var context = new analytic_dataContext())
+        {
+            var Query = context.Diagnosticos
+            .Join(context.Pacientes, dg => dg.IdPaciente, pc => pc.Id, (dg, pc) => new
+            {
+                Paciente = pc.Id,
+                Diagnostico = dg.Id,
+                Mes = dg.DataDiagnostico.Month,
+                ClasseSocial = pc.IdClasseSocial
+            })
+            .Join(context.ClasseSocials, pc => pc.ClasseSocial, cs => cs.Id, (pc, cs) => new
+            {
+                Mes = pc.Mes,
+                ClasseSocial = cs.SalarioTeto,
+                Diagnostico = pc.Diagnostico
+            })
+            .GroupBy(cs => cs.ClasseSocial)
+            .Select(q => new
+            {
+                Mes =  q.All(cs => cs.Mes > 0),
+                ClasseSocial = q.Key,
+                QtdDiagnosticos = q.Count(cs => cs.Diagnostico > -1)
+            });
+        }
+    }
+
+    public void  ReincidenciaMesRegiao()
+    {
+        using(var context = new analytic_dataContext())
+        {
+            var Query = context.Diagnosticos
+            .Join(context.Doencas, dg => dg.IdDoenca, dc => dc.Id, (dg, dc) => new
+            {
+                IdDiagnostico = dg.Id,
+                Paciente = dg.IdPaciente,
+                Doenca = dc.Nome,
+                Mes = dg.DataDiagnostico.Month,
+
+            })
+            .Join(context.Pacientes, dc => dc.Paciente, pc => pc.Id, (dc, pc) => new
+            {
+                IdDiagnosticos = dc.IdDiagnostico,
+                Estado = pc.IdEstado,
+                Doenca = dc.Doenca,
+                Mes = dc.Mes
+            })
+            .Join(context.Estados, pc => pc.Estado, es => es.Id, (pc, es) => new 
+            {
+                IdDiagnostico = pc.IdDiagnosticos,
+                Regiao = es.IdRegiao,
+                Doenca = pc.Doenca,
+                Mes = pc.Mes
+            })
+            .Join(context.Regioes, es => es.Regiao, rg => rg.Id, (es, rg) => new
+            {
+                Doenca = es.Doenca,
+                Regiao = rg.NomeRegiao,
+                Mes = es.Mes
+            })
+            .GroupBy(g => g.Doenca)
+            .Select( q => new
+            {
+                Mes = q.Key
+            });
+        }
+    }
+
+    public void PacienteClasseEstado()
+    {
+        using(var context = new analytic_dataContext())
+        {
+            
+        }
+    }
 }
