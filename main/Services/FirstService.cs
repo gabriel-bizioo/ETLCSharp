@@ -24,7 +24,8 @@ class FirstService{
                 NomeDoenca = dn.Nome,
                 Salario = dgpccs.Teto,
                 Idade = dgpccs.Idade
-            }).GroupBy(x => x.NomeDoenca)
+            })
+            .GroupBy(x => x.NomeDoenca)
             .Select(g => new {
                 salariomedio = g.Average(x => x.Salario),
                 idademedia = g.Average(i => i.Idade),
@@ -47,17 +48,63 @@ class FirstService{
                 }
             }
         }
-
-
     }
 
     public void DoencaIdadeRegiao()
     {
         using(var context = new analytic_dataContext())
         {
-            var Query = context.Diagnosticos.Join(context.Pacientes, dg => dg.IdPaciente, pc => pc.Id, (pc, dg) => new
+            var Query = context.Diagnosticos
+            .Join(context.Pacientes, dg => dg.IdPaciente, pc => pc.Id, (dg, pc) => new
             {
+                IdDoenca = dg.IdDoenca,
+                IdPaciente = pc.Id,
+                IdEstado = pc.IdEstado,
+                Idade = pc.Idade
+            })
+            .Join(context.Estados, pc => pc.IdEstado, es => es.Id, (pc, es) => new
+            {
+                IdRegiao = es.IdRegiao,
+                Regiao = es.Nome,
+                IdDoenca = pc.IdDoenca,
+                Idade = pc.Idade
+            })
+            .Join(context.Doencas, es => es.IdDoenca, dc => dc.Id, (es, dc) => new
+            {
+                Idade = es.Idade,
+                Regiao = es.Regiao,
+                Doenca = dc.Nome
+            })
+            .GroupBy(dc => dc.Doenca)
+            .Select(q => new
+            {
+                Doenca = q.Key,
+                IdadeMedia = q.Average(x => x.Idade)
+            });
+        }
+    }
 
+    public void DiagnosticosClasseSocial()
+    {
+        using(var context = new analytic_dataContext())
+        {
+            var Query = context.Diagnosticos
+            .Join(context.Pacientes, dg => dg.IdPaciente, pc => pc.Id, (dg, pc) => new
+            {
+                Paciente = pc.Id,
+                Diagnostico = dg.Id,
+                ClasseSocial = pc.IdClasseSocial
+            })
+            .Join(context.ClasseSocials, pc => pc.ClasseSocial, cs => cs.Id, (pc, cs) => new
+            {
+                ClasseSocial = cs.SalarioTeto,
+                Diagnostico = pc.Diagnostico
+            })
+            .GroupBy(cs => cs.ClasseSocial)
+            .Select(q => new
+            {
+                ClasseSocial = q.Key,
+                QtdDiagnosticos = q.Count(cs => cs.Diagnostico > -1)
             });
         }
     }
