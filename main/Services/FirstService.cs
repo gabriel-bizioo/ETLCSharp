@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-
 namespace main.Services;
 
-class FirstService{
-    public void NewTable(){
+public class FirstService{
+    public static void NewTable(){
 
         using(var context = new analytic_dataContext())
         {
@@ -14,23 +13,25 @@ class FirstService{
                 IdClasse = pc.IdClasseSocial,
                 IdDoenca = dg.IdDoenca,
                 Idade = pc.Idade
-            }).Join(context.ClasseSocials, dgpc => dgpc.IdClasse, cs => cs.Id, (dgpc, cs) => new
+            })
+            .Join(context.ClasseSocials, dgpc => dgpc.IdClasse, cs => cs.Id, (dgpc, cs) => new
             {
                 Teto = cs.SalarioTeto,
                 IdDoenca = dgpc.IdDoenca,
                 Idade = dgpc.Idade
-            }).Join(context.Doencas, dgpccs => dgpccs.IdDoenca, dn => dn.Id, (dgpccs, dn) => new
+            })
+            .Join(context.Doencas, dgpccs => dgpccs.IdDoenca, dn => dn.Id, (dgpccs, dn) => new
             {
                 NomeDoenca = dn.Nome,
-                Salario = dgpccs.Teto,
+                Teto = dgpccs.Teto,
                 Idade = dgpccs.Idade
             })
             .GroupBy(x => x.NomeDoenca)
             .Select(g => new {
-                salariomedio = g.Average(x => x.Salario),
+                salariomedio = (int)g.Average(x => x.Teto),
                 idademedia = g.Average(i => i.Idade),
                 Doenca = g.Key
-            });
+            }).OrderBy(c => c.salariomedio);
 
             using(var context2 = new ets_dadosContext())
             {
@@ -50,7 +51,7 @@ class FirstService{
         }
     }
 
-    public void DoencaIdadeRegiao()
+    public static void DoencaIdadeRegiao()
     {
         using(var context = new analytic_dataContext())
         {
@@ -75,12 +76,22 @@ class FirstService{
                 Regiao = es.Regiao,
                 Doenca = dc.Nome
             })
-            .GroupBy(dc => dc.Doenca)
+            .GroupBy(dc => new 
+            {
+                dc.Doenca,
+                dc.Regiao
+            })
             .Select(q => new
             {
-                Doenca = q.Key,
-                IdadeMedia = q.Average(x => x.Idade)
+                Doenca = q.Key.Doenca,
+                IdadeMedia = q.Average(x => x.Idade),
+                Regiao = q.Key.Regiao
             });
+
+            foreach(var line in Query)
+            {
+                Console.WriteLine(line);
+            }
         }
     }
 
