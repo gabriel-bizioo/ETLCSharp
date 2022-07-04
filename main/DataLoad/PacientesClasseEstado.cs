@@ -8,6 +8,6 @@ namespace main
         public int Id { get; set; }
         public int QuantidadePacientes { get; set; }
         public string ClasseSocial { get; set; } = null!;
-        public string Estado { get; set; } = null!;
+        public string? Estado { get; set; } = null!;
     }
 }

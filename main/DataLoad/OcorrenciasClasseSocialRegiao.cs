@@ -9,6 +9,6 @@ namespace main
         public int QuantidadeOcorrencias { get; set; }
         public string? NomeDoença { get; set; }
         public string ClasseSocial { get; set; } = null!;
-        public string Regiao { get; set; } = null!;
+        public string? Regiao { get; set; } = null!;
     }
 }

@@ -9,6 +9,13 @@ namespace main;
 class main{
     public static void Main(string[] args){
 
-       FirstService.DoencaIdadeRegiao();
+    //    FirstService.NewTable();
+    //    FirstService.DiagnosticosClasseSocialMes();
+    //    FirstService.DoencaIdadeRegiao();
+    //    FirstService.PacienteClasseEstado();
+    //    FirstService.DiagnosticosClasseSocial();
+    //    FirstService.OcorrenciasClasseSocialRegiao();
+    //    FirstService.IncidenciasPorIdade();
+    //    FirstService.ReincidenciaMesRegiao();
     }
 }

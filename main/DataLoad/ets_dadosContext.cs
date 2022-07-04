@@ -42,7 +42,7 @@ namespace main
         {
             modelBuilder.Entity<DiagnosticosClasseMe>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("diagnosticos_classe_mes");
 
@@ -52,9 +52,7 @@ namespace main
                     .HasColumnName("classe_social")
                     .IsFixedLength();
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+ 
 
                 entity.Property(e => e.Mes).HasColumnName("mes");
 
@@ -63,22 +61,18 @@ namespace main
 
             modelBuilder.Entity<DiagnosticosPorClasse>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("diagnosticos_por_classe");
 
                 entity.Property(e => e.ClasseSocial).HasColumnName("classe_social");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
 
                 entity.Property(e => e.QuantidadeDiagnosticos).HasColumnName("quantidade_diagnosticos");
             });
 
             modelBuilder.Entity<DoençaIdadeRegiao>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("doença_idade_regiao");
 
@@ -86,10 +80,6 @@ namespace main
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("doenca");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
 
                 entity.Property(e => e.MediaIdade).HasColumnName("media_idade");
 
@@ -101,7 +91,7 @@ namespace main
 
             modelBuilder.Entity<IncidenciasPorIdade>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("incidencias_por_idade");
 
@@ -109,10 +99,6 @@ namespace main
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("estados");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
 
                 entity.Property(e => e.Idade).HasColumnName("idade");
 
@@ -126,7 +112,7 @@ namespace main
 
             modelBuilder.Entity<NewTable>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("NewTable");
 
@@ -135,10 +121,6 @@ namespace main
                     .IsUnicode(false)
                     .HasColumnName("doenca");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
-
                 entity.Property(e => e.MediaIdade).HasColumnName("media_idade");
 
                 entity.Property(e => e.MediaSalarial).HasColumnName("media_salarial");
@@ -146,7 +128,7 @@ namespace main
 
             modelBuilder.Entity<OcorrenciasClasseSocialRegiao>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("ocorrencias_classe_social_regiao");
 
@@ -154,8 +136,6 @@ namespace main
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("classe_social");
-
-                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.NomeDoença)
                     .HasMaxLength(100)
@@ -172,7 +152,7 @@ namespace main
 
             modelBuilder.Entity<PacientesClasseEstado>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("pacientes_classe_estado");
 
@@ -187,22 +167,14 @@ namespace main
                     .IsUnicode(false)
                     .HasColumnName("estado");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
-
                 entity.Property(e => e.QuantidadePacientes).HasColumnName("quantidade_pacientes");
             });
 
             modelBuilder.Entity<ReiciendenciaMesesRegium>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
-                entity.ToTable("reiciendencia_meses_regia");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                entity.ToTable("reiciendencia_meses_regia");                    
 
                 entity.Property(e => e.Mes).HasColumnName("mes");
 
